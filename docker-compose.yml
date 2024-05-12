@@ -1,0 +1,27 @@
+version: '3.6'
+
+services:
+  web:
+    build: ./web
+    ports:
+      - 5177:80
+    # restart: always
+    networks:
+      - dpl
+  backend:
+    build: ./backend
+    ports:
+      - 5176:8000
+    # restart: always
+    networks:
+      - dpl
+    environment:
+      - PB_URL='https://mado.one/pbsb'
+
+volumes:
+  db-data-2:
+
+networks:
+  dpl:
+    name: dpl-net
+    driver: bridge
