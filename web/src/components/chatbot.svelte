@@ -27,7 +27,7 @@
   import { SaveIcon } from "lucide-svelte";
   const pb = new PocketBase("https://mado.one/pbsb");
 
-  let inputSchemaId: string | null;
+  let inputLoadAgentId: string | null;
   let schemaId: string | null = "";
   let joint: JointPlusService;
   let stencilOpened = true;
@@ -230,15 +230,15 @@
 
   const loadSchemaById = async () => {
     try {
-      if (!inputSchemaId) return;
+      if (!inputLoadAgentId) return;
       //   const response = await fetch(`TODO/api/schema/${inputSchemaId}`, {
       //     headers: { "Content-Type": "application/json" },
       //   });
-      const record = await pb.collection("nodes").getOne(inputSchemaId, {});
+      const record = await pb.collection("nodes").getFirstListItem(`agent='${inputLoadAgentId}'`);
 
       const graphJson = generateOriginalJson(record.description);
       openFile(graphJson);
-      schemaId = inputSchemaId;
+      schemaId = record.id;
       createNewSchemaModal = false;
 
       const newSchema = {
@@ -360,8 +360,8 @@
               <div>
                 <Input
                   type="text"
-                  bind:value={inputSchemaId}
-                  placeholder="Идентификатор схемы"
+                  bind:value={inputLoadAgentId}
+                  placeholder="Идентификатор агента"
                 />
               </div>
               <Button on:click={loadSchemaById} class="w-52" color="blue">
